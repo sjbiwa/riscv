@@ -13,16 +13,24 @@
 #define	mutex_lock(v)		(RT_OK)
 #define	mutex_unlock(v)		(RT_OK)
 
-#define	UART_BASE	(0x10013000)
-//#define	UART_BASE	(0x10010000)
-//#define	UART_BASE	(0x10000000)
+#define	UART_BASE			(0x10013000)
+//#define	UART_BASE		(0x10010000)
+//#define	UART_BASE		(0x10000000)
+
+#define	TXDATA_IDX			(0)
+#define	RXDATA_IDX			(1)
+#define	TXCTRL_IDX			(2)
+#define	RXCTRL_IDX			(3)
+#define	IE_IDX				(4)
+#define	IP_IDX				(5)
+#define	DIV_IDX				(6)
 
 volatile auto uart_base = (volatile uint32_t*)(UART_BASE);
 
 static void debug_print(const char* str)
 {
 	while ( *str ) {
-		uart_base[0] = *str++;
+		uart_base[TXDATA_IDX] = *str++;
 	}
 }
 
@@ -263,9 +271,10 @@ extern "C" {
 void lprintf_init(void)
 {
 	printf_mutex = mutex_create();
-	uart_base[2] = 0x01;
-	uart_base[3] = 0x01;
-	uart_base[6] = 17;
+	uart_base[TXCTRL_IDX] = 0x00010001;
+	uart_base[RXCTRL_IDX] = 0x00010001;
+	uart_base[DIV_IDX] = 17;
+	uart_base[IE_IDX] = 0x3;
 }
 }
 
