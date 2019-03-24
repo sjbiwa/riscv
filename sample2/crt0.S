@@ -17,12 +17,17 @@ _start:
 
 	csrw	mtvec, s0
 	csrw	mcause, zero
+	
+	.option push
+	.option norelax	
+	la		gp, __global_pointer$
+	.option pop
 
 // data section copy
 	la		s0, __data_start
 	la		s1, __data_end
 	la		s2, __ldata_start
-// data section ‚Ì LMA==VMA‚È‚çƒRƒs[‚µ‚È‚¢
+// data section ã® LMA==VMAãªã‚‰ã‚³ãƒ”ãƒ¼ã—ãªã„
 	beq		s0, s2, 1f
 0:
 	bgeu	s0, s1, 1f

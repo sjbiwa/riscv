@@ -42,7 +42,7 @@ static int vtsprintf(char* buff,const char* fmt,va_list arg){
 	len = 0;
 
 	while(*fmt){
-		if(*fmt=='%'){		/* % ‚ÉŠÖ‚·‚éˆ— */
+		if(*fmt=='%'){		/* % ã«é–¢ã™ã‚‹å‡¦ç† */
 			zeroflag = width = 0;
 			fmt++;
 
@@ -57,23 +57,23 @@ static int vtsprintf(char* buff,const char* fmt,va_list arg){
 			/* printf ("zerof = %d,width = %d\n",zeroflag,width); */
 
 			switch(*fmt){
-			case 'd':		/* 10i” */
+			case 'd':		/* 10é€²æ•° */
 				size = tsprintf_decimal(va_arg(arg,signed long),buff,zeroflag,width);
 				break;
-			case 'x':		/* 16i” 0-f */
+			case 'x':		/* 16é€²æ•° 0-f */
 				size = tsprintf_hexadecimal(va_arg(arg,unsigned long),buff,0,zeroflag,width);
 				break;
-			case 'X':		/* 16i” 0-F */
+			case 'X':		/* 16é€²æ•° 0-F */
 				size = tsprintf_hexadecimal(va_arg(arg,unsigned long),buff,1,zeroflag,width);
 				break;
-			case 'c':		/* ƒLƒƒƒ‰ƒNƒ^[ */
+			case 'c':		/* ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒ¼ */
 				size = tsprintf_char(va_arg(arg,int),buff);
 				break;
-			case 's':		/* ASCIIZ•¶š—ñ */
+			case 's':		/* ASCIIZæ–‡å­—åˆ— */
 				size = tsprintf_string(va_arg(arg,char*),buff);
 				break;
-			default:		/* ƒRƒ“ƒgƒ[ƒ‹ƒR[ƒhˆÈŠO‚Ì•¶š */
-				/* %%(%‚É‘Î‰)‚Í‚±‚±‚Å‘Î‰‚³‚ê‚é */
+			default:		/* ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ«ã‚³ãƒ¼ãƒ‰ä»¥å¤–ã®æ–‡å­— */
+				/* %%(%ã«å¯¾å¿œ)ã¯ã“ã“ã§å¯¾å¿œã•ã‚Œã‚‹ */
 				len++;
 				*(buff++) = *fmt;
 				break;
@@ -87,7 +87,7 @@ static int vtsprintf(char* buff,const char* fmt,va_list arg){
 		}
 	}
 
-	*buff = '\0';		/* I’[‚ğ“ü‚ê‚é */
+	*buff = '\0';		/* çµ‚ç«¯ã‚’å…¥ã‚Œã‚‹ */
 
 	va_end(arg);
 	return (len);
@@ -97,7 +97,7 @@ static int vtsprintf(char* buff,const char* fmt,va_list arg){
 
 
 /*
-  ”’l => 10i•¶š—ñ•ÏŠ·
+  æ•°å€¤ => 10é€²æ–‡å­—åˆ—å¤‰æ›
 */
 static int tsprintf_decimal(signed long val,char* buff,int zf,int wd){
 	int i;
@@ -106,18 +106,18 @@ static int tsprintf_decimal(signed long val,char* buff,int zf,int wd){
 	int len = 0;
 	int minus = 0;
 
-	if (!val){		/* w’è’l‚ª0‚Ìê‡ */
+	if (!val){		/* æŒ‡å®šå€¤ãŒ0ã®å ´åˆ */
 		*(ptmp--) = '0';
 		len++;
 	} else {
-		/* ƒ}ƒCƒiƒX‚Ì’l‚Ìê‡‚É‚Í2‚Ì•â”‚ğæ‚é */
+		/* ãƒã‚¤ãƒŠã‚¹ã®å€¤ã®å ´åˆã«ã¯2ã®è£œæ•°ã‚’å–ã‚‹ */
 		if (val < 0){
 			val = ~val;
 			val++;
 			minus = 1;
 		}
 		while (val){
-			/* ƒoƒbƒtƒ@ƒAƒ“ƒ_[ƒtƒ[‘Îô */
+			/* ãƒãƒƒãƒ•ã‚¡ã‚¢ãƒ³ãƒ€ãƒ¼ãƒ•ãƒ­ãƒ¼å¯¾ç­– */
 			if (len >= 8){
 				break;
 			}
@@ -130,7 +130,7 @@ static int tsprintf_decimal(signed long val,char* buff,int zf,int wd){
 
 	}
 
-	/* •„†AŒ…‡‚í‚¹‚ÉŠÖ‚·‚éˆ— */
+	/* ç¬¦å·ã€æ¡åˆã‚ã›ã«é–¢ã™ã‚‹å‡¦ç† */
 	if (zf){
 		if (minus){
 			wd--;
@@ -154,7 +154,7 @@ static int tsprintf_decimal(signed long val,char* buff,int zf,int wd){
 		}
 	}
 
-	/* ¶¬•¶š—ñ‚Ìƒoƒbƒtƒ@ƒRƒs[ */
+	/* ç”Ÿæˆæ–‡å­—åˆ—ã®ãƒãƒƒãƒ•ã‚¡ã‚³ãƒ”ãƒ¼ */
 	for (i=0;i<len;i++){
 		*(buff++) = *(++ptmp);
 	}
@@ -163,7 +163,7 @@ static int tsprintf_decimal(signed long val,char* buff,int zf,int wd){
 }
 
 /*
-  ”’l => 16i•¶š—ñ•ÏŠ·
+  æ•°å€¤ => 16é€²æ–‡å­—åˆ—å¤‰æ›
 */
 static int tsprintf_hexadecimal(unsigned long val,char* buff,
 								int capital,int zf,int wd){
@@ -173,19 +173,19 @@ static int tsprintf_hexadecimal(unsigned long val,char* buff,
 	int len = 0;
 	char str_a;
 
-	/* A-F‚ğ‘å•¶š‚É‚·‚é‚©¬•¶š‚É‚·‚é‚©Ø‚è‘Ö‚¦‚é */
+	/* A-Fã‚’å¤§æ–‡å­—ã«ã™ã‚‹ã‹å°æ–‡å­—ã«ã™ã‚‹ã‹åˆ‡ã‚Šæ›¿ãˆã‚‹ */
 	if (capital){
 		str_a = 'A';
 	} else {
 		str_a = 'a';
 	}
 
-	if (!val){		/* w’è’l‚ª0‚Ìê‡ */
+	if (!val){		/* æŒ‡å®šå€¤ãŒ0ã®å ´åˆ */
 		*(ptmp--) = '0';
 		len++;
 	} else {
 		while (val){
-			/* ƒoƒbƒtƒ@ƒAƒ“ƒ_[ƒtƒ[‘Îô */
+			/* ãƒãƒƒãƒ•ã‚¡ã‚¢ãƒ³ãƒ€ãƒ¼ãƒ•ãƒ­ãƒ¼å¯¾ç­– */
 			if (len >= 8){
 				break;
 			}
@@ -197,7 +197,7 @@ static int tsprintf_hexadecimal(unsigned long val,char* buff,
 				*ptmp += '0';
 			}
 
-			val >>= 4;		/* 16‚ÅŠ„‚é */
+			val >>= 4;		/* 16ã§å‰²ã‚‹ */
 			ptmp--;
 			len++;
 		}
@@ -215,7 +215,7 @@ static int tsprintf_hexadecimal(unsigned long val,char* buff,
 }
 
 /*
-  ”’l => 1•¶šƒLƒƒƒ‰ƒNƒ^•ÏŠ·
+  æ•°å€¤ => 1æ–‡å­—ã‚­ãƒ£ãƒ©ã‚¯ã‚¿å¤‰æ›
 */
 static int tsprintf_char(int ch,char* buff){
 	*buff = (char)ch;
@@ -223,7 +223,7 @@ static int tsprintf_char(int ch,char* buff){
 }
 
 /*
-  ”’l => ASCIIZ•¶š—ñ•ÏŠ·
+  æ•°å€¤ => ASCIIZæ–‡å­—åˆ—å¤‰æ›
 */
 static int tsprintf_string(char* str,char* buff){
 	int count = 0;
@@ -237,7 +237,7 @@ static int tsprintf_string(char* str,char* buff){
 
 
 /*
-  Tiny sprintfŠÖ”
+  Tiny sprintfé–¢æ•°
 */
 int tsprintf(char* buff,const char* fmt, ...){
 	va_list arg;
@@ -255,7 +255,7 @@ int tsprintf(char* buff,const char* fmt, ...){
 }
 
 /*
-  Tiny sprintfŠÖ”
+  Tiny sprintfé–¢æ•°
 */
 static int printf_mutex;
 

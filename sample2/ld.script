@@ -92,15 +92,32 @@ SECTIONS
     *(.sdata .sdata.* .gnu.linkonce.s.*)
     SORT(CONSTRUCTORS)
     . = ALIGN(64 / 8);
+  } >RAM AT>FLASH
+  . = .;
+  
+  .sdata          :
+  {
+    __global_pointer$ = . + 0x800;
+    *(.srodata.cst16) *(.srodata.cst8) *(.srodata.cst4) *(.srodata.cst2) *(.srodata .srodata.*)
+    *(.sdata .sdata.* .gnu.linkonce.s.*)
+    . = ALIGN(64 / 8);
     __data_end = .;
   } >RAM AT>FLASH
+  
   _edata = .; PROVIDE (edata = .);
   . = .;
   
+  __bss_start = .;
+  .sbss           :
+  {
+    *(.dynsbss)
+    *(.sbss .sbss.* .gnu.linkonce.sb.*)
+    *(.scommon)
+  }
+
   . = ALIGN(64 / 8);
   .bss :
   {
-    __bss_start = .;
     *(.dynsbss)
     *(.sbss .sbss.* .gnu.linkonce.sb.*)
     *(.scommon)
@@ -113,9 +130,9 @@ SECTIONS
       FIXME: Why do we need it? When there is no .bss section, we don't
       pad the .data section.  */
     . = ALIGN(. != 0 ? 64 / 8 : 1);
-    __bss_end = .;
   } >RAM
   . = ALIGN(64 / 8);
+    __bss_end = .;
   _end = .; PROVIDE (end = .);
   
   . = ALIGN(64 / 4);
